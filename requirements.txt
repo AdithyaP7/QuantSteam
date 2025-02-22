@@ -1,0 +1,25 @@
+# Data Streaming
+kafka-python
+
+# Data Processing
+pandas
+numpy
+
+# Machine Learning & Forecasting
+scikit-learn
+statsmodels
+arch
+
+# Database (Snowflake)
+snowflake-connector-python
+snowflake-sqlalchemy
+
+# API Requests
+requests
+
+# Dashboard API (if needed)
+fastapi
+uvicorn
+
+# Environment Variables
+python-dotenv

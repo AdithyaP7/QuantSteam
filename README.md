@@ -6,3 +6,7 @@ Virtual Environment:
 python -m venv venv  
 source venv/bin/activate  
 pip install -r requirements.txt  
+
+
+API Key:  
+5SIOLTZC95CTPAJF

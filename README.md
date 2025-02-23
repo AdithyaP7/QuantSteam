@@ -36,11 +36,18 @@ bin/kafka-console-consumer.sh --topic stock_data --from-beginning --bootstrap-se
 
 ## Kafka Snowflake Sink Connector
 
-Update the plugin.path in kafka connect-standalone properties.
+#### Update the plugin.path in kafka connect-standalone properties.
 (change for your specific path)
 plugin.path=/Users/akshaymistry/Dev/gt/cs4440/QuantStream/kafka_2.13-3.9.0/libs
 
+#### Force Kafka to Use x86_64 Java
+export JAVA_HOME=$(/usr/libexec/java_home -v 17 --arch x86_64)
 
+#### Run Connector Using x86_64
+cd kafka_2.13-3.9.0 
+arch -x86_64 ./bin/connect-standalone.sh \
+    config/connect-standalone.properties \
+    config/SF_connect.properties
 
 
 

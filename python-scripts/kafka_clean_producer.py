@@ -1,4 +1,4 @@
-from kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaConsumer
 import json
 import time
 import pandas as pd
@@ -33,21 +33,49 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
+consumer = KafkaConsumer(
+    "stock_data",
+    bootstrap_servers=['localhost:9091'],
+    group_id="producer2",
+    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+)
+
 topic = 'cleaned_stock_data'
 
-file_path = '../dummy/dummy_stock_data.csv'
-df = pd.read_csv(file_path)
-df = df.dropna()
+
+# need to fix this for realistic data. fit to some random values rn
+initial_data = [
+    {"open": 102.0, "high": 104.0, "low": 98.0, "close": 101.0, "volume": 1000000},
+    {"open": 152.0, "high": 154.0, "low": 148.0, "close": 151.0, "volume": 1000000},
+    {"open": 202.0, "high": 204.0, "low": 198.0, "close": 201.0, "volume": 1000000},
+]
+
+initial_values = [
+    [d["open"], d["high"], d["low"], d["close"], d["volume"]] for d in initial_data
+]
+
 scaler = StandardScaler()
-scaler.fit(df[["open", "high", "low", "close", "volume"]])
+scaler.fit(initial_values)
+for message in consumer:
+    raw = message.value
+    preprocessed = preprocess_data(raw, scaler)
+    producer.send(topic, value=preprocessed)
 
-
-for index, row in df.iterrows():
-    raw_data = row.to_dict()
-    preprocessed_data = preprocess_data(raw_data, scaler)
-    producer.send(topic, value=preprocessed_data)
     time.sleep(0.1)
-    
+
+# file_path = '../dummy/dummy_stock_data.csv'
+# df = pd.read_csv(file_path)
+# df = df.dropna()
+# scaler = StandardScaler()
+# scaler.fit(df[["open", "high", "low", "close", "volume"]])
+
+
+# for index, row in df.iterrows():
+#     raw_data = row.to_dict()
+#     preprocessed_data = preprocess_data(raw_data, scaler)
+#     producer.send(topic, value=preprocessed_data)
+#     time.sleep(0.1)
+
 producer.flush()
 
 print(f"Data sent to topic '{topic}'.")
@@ -62,5 +90,6 @@ print(f"Data sent to topic '{topic}'.")
 # print(df_cleaned.isna().sum())
 
 producer.close()
+consumer.close()
 
 

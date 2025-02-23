@@ -4,6 +4,7 @@ import json
 from dotenv import load_dotenv
 from kafka import KafkaProducer
 import time
+from datetime import datetime
 
 load_dotenv()
 API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
@@ -44,19 +45,37 @@ def fetch_stock_data(symbol):
         print(f"Error fetching data for {symbol}: {data.get('Note', 'Unknown error')}")
         return None
 
-def send_to_kafka(symbol):
+def fetch_dummy_stock_data(symbol):
+    """Generate dummy stock data for testing."""
+    now = datetime.now()
+
+    # Extract the time component
+    current_time = now.time()
+    dummy_price = {'MSFT': 100.00, 'AAPL': 150.00, 'GOOGL': 200.00, 'AMZN': 300.00, 'TSLA': 400.00, 'META': 500.00, 'NVDA': 600.00, 'AMD': 700.00, 'IBM': 900.00, 'NFLX': 1000.00}
+    dummy_price[symbol] = dummy_price[symbol] + 1
+    return {
+        "symbol": symbol,
+        "timestamp": str(current_time),
+        "open": dummy_price[symbol] + 1,
+        "high": dummy_price[symbol] + 3,
+        "low": dummy_price[symbol] - 3,
+        "close": dummy_price[symbol],
+        "volume": "1000000"
+    }
+
+def send_to_kafka(symbols):
     """Fetch data and send it to Kafka."""
-    stock_data = fetch_stock_data(symbol)
-    if stock_data:
-        producer.send(KAFKA_TOPIC, value=stock_data)
-        producer.flush()
-        print(f"Sent to Kafka: {stock_data}")
+    for symbol in symbols:
+        stock_data = fetch_dummy_stock_data(symbol)
+        if stock_data:
+            producer.send(KAFKA_TOPIC, value=stock_data)
+            producer.flush()
+            print(f"Sent to Kafka: {stock_data}")
 
 if __name__ == "__main__":
-    stock_symbol = input("Enter stock symbol (e.g., AAPL, MSFT): ").upper()
     try:
         while True:
-            send_to_kafka(stock_symbol)
+            send_to_kafka(["MSFT", 'AAPL', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'AMD', 'IBM', 'NFLX'])
             time.sleep(60)  
     except KeyboardInterrupt:
         print("Stopped producer.")

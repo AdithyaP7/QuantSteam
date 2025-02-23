@@ -34,3 +34,13 @@ bin/kafka-topics.sh --create --topic stock_data --bootstrap-server localhost:909
 ### Start Consumer
 bin/kafka-console-consumer.sh --topic stock_data --from-beginning --bootstrap-server localhost:9091
 
+## Kafka Snowflake Sink Connector
+
+Update the plugin.path in kafka connect-standalone properties.
+(change for your specific path)
+plugin.path=/Users/akshaymistry/Dev/gt/cs4440/QuantStream/kafka_2.13-3.9.0/libs
+
+
+
+
+

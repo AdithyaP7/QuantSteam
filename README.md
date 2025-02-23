@@ -11,6 +11,12 @@ pip install -r requirements.txt
 API Key:  
 5SIOLTZC95CTPAJF
 
+.env 
+ALPHA_VANTAGE_API_KEY=5SIOLTZC95CTPAJF
+SNOWFLAKE_USER=your_snowflake_username
+SNOWFLAKE_PASSWORD=your_password
+SNOWFLAKE_ACCOUNT=your_account_identifier
+
 ## Kafka
 cd kafka_2.13-3.9.0  
 

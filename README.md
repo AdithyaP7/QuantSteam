@@ -23,8 +23,8 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 bin/kafka-server-start.sh config/server.properties  
 
 ### Create Kafka Topic
-bin/kafka-topics.sh --create --topic my_topic123 --bootstrap-server localhost:9091 --replication-factor 1 --partitions 1
+bin/kafka-topics.sh --create --topic stock_data --bootstrap-server localhost:9091 --replication-factor 1 --partitions 1
 
 ### Start Consumer
-bin/kafka-console-consumer.sh --topic my_topic123 --from-beginning --bootstrap-server localhost:9091
+bin/kafka-console-consumer.sh --topic stock_data --from-beginning --bootstrap-server localhost:9091
 
